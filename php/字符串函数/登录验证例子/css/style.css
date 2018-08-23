@@ -1,0 +1,66 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+#resigter{
+	/*background-color: pink;*/
+	width: 600px;
+	margin: 0 auto;
+}
+
+h1{
+	/*background-color: red;*/
+	height: 100px;
+	line-height: 100px;
+}
+
+input{
+	outline: none;
+	height: 30px;
+}
+
+p{
+	/*background-color: white;*/
+	height: 50px;
+	line-height: 50px;
+}
+
+p:nth-child(5)>span{
+	/*background-color: red;*/
+	display: inline-block;
+	width: 300px;
+}
+
+p:nth-child(5){
+	/*background-color: pink;*/
+	height: 100px;
+}
+
+label[for="like"]{
+	/*background-color: red;*/
+	position: relative;
+	top: -25px;
+	left: 0;
+}
+input[name="verify"]{
+	width: 80px;
+}
+
+p:last-child{
+	/*background-color: red;*/
+	padding-left: 80px;
+}
+
+input[type="submit"]{
+	width: 200px;
+	height: 40px;
+	border-radius: 5px;
+	border: 0px;
+	background-color: red;
+	color: white;
+}
+
+input[type="submit"]:hover{
+	cursor: pointer;
+}
