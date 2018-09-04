@@ -36,7 +36,7 @@
    第一种   在 mac 和 linux下 ：
 
    1. 将下载好的 composer.phar 文件移动到 /usr/local/bin/ 目录下面
-   2. 将文件 composer.phar 重命名为 composer
+   2. 将文件 composer.phar 重命名为 composer (修改此文件的权限755)
    3. 测试是否可以正常使用：  composer -v 或者 composer 查看是否可以出现标志物（注意测试的界面） xhell
 
    第二种  在 win 下：
