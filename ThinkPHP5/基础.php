@@ -122,6 +122,91 @@
  *        总结：
  *                a1 .  在hello方法中依次定义变量,获取参数
  *                a2 .  利用 实例 Request() 对象
- *                a3 .  利用 Request 依赖注入  
+ *                a3 .  利用 Request 依赖注入
  *
+ */
+
+/**
+ *   参数校验层  validate  类   (作用：验证用户传过来的数据是否合法)
+ *
+ *   1. 独立验证
+ *
+ *      引入  validate  类    use Validate;
+ *
+ *      // 接收的数据(待校验)
+ *      $data = [ 'name' => 'vendor' , 'email' => '852688838@qq.com' ];
+ *
+ *      // 定义的校验规则 (内置规则,还有自定义规则)
+ *      $validate = new Validate([
+ *           'name'  => 'require|max:10',
+ *           'email' => 'email',
+ *      ]);
+ *
+ *      // 执行校验
+ *      $result = $validate->check($data);   返回值： boolean    $result = $validate->batch()->check($data);  批量(一起)校验
+ *
+ *      // 获取错误结果
+ *      $info = $validate->getError();
+ *
+ *   2. 验证器 (******重要**** 更加封装，相比独立验证, 推荐)
+ */
+
+
+/**
+ *          REST  (全称：Representational State Transfer  表述性状态转移，  一种约定,使用JSON描述数据)        轻量
+ *
+ *   区别： SOAP   (全称：simple object access protocol  简单对象存取协议, 通常就是说，使用XML来描述数据)      繁重
+ *
+ *   作用： 可以在不同的语言之间交换数据 , 服务器返回给你一个结果, 这个结果是JSON格式的.
+ *
+ *   内容：
+ *         基于资源 (url 就是资源) 增删改查就是对资源状态的改变
+ *         使用HTTP动词来操作资源   GET POST DELETE PUT PATCH
+ *
+ *         1. 传统的web，选择个get还是post的依据：   看数据的简单还是繁琐， 如果简单就用GET, 繁琐就用POST
+ *         2. REST的web设计
+ *
+ *   REST 的最佳实践
+ *
+ *         HTTP 动词的：
+ *
+ *          POST   创建
+ *          PUT    更新
+ *          GET    查询
+ *          DELETE 删除
+ *
+ *         状态码： 404、400、200、201、202、401、403、500
+ *
+ *         错误码
+ *
+ *         统一描述错误
+ *
+ *  REST 的最佳方式 (模仿):
+ *
+ *        豆瓣开放API   GitHub开放API
+ *
+ *
+ *  合理使用REST, 不要盲目照搬标准RSET
+ */
+
+
+/**
+ *   使用 Token令牌 授权和验证身份
+ */
+
+/**
+ *   版本控制
+ */
+
+
+/**
+ *   测试与生产环境
+ */
+
+/**
+ *    url语义明确
+ */
+
+/**
+ *   一份标准的文档
  */
