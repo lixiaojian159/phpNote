@@ -115,3 +115,26 @@
   *                            ------> 使用系统类 (DomDocument,XMLWriter,SimpleXML)
   *       2.2   XML方式封装接口数据方法
   */
+
+
+/**
+ *   2.1  php生成XML数据  (组装字符串)
+ */
+  class Response{
+
+    public static function xml(){
+      header("Content-Type:text/xml");
+      $xml  = '<?xml version="1.0" encoding="UTF-8"?>';
+      $xml .= '<root>';
+      $xml .= '<code>200</code>';
+      $xml .= '<message>返回数据成功</message>';
+      $xml .= '<data>';
+      $xml .= '<id>1</id>';
+      $xml .= '<name>lijian</name>';
+      $xml .= '</data>';
+      $xml .= '</root>';
+      echo $xml;
+    }
+  }
+
+  Response::xml();
