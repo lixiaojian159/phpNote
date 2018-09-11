@@ -120,6 +120,14 @@
 /**
  *   2.1  php生成XML数据  (组装字符串)
  */
+
+ **
+  * [Response 生成XML数据]
+  * @param  integer  $code 状态码
+  * @param  string   $msg  提示信息
+  * @param  array    $data 返回数据
+  * return  string
+  */
   class Response{
 
     public static function xml(){
@@ -138,3 +146,318 @@
   }
 
   Response::xml();
+
+
+  /**
+   *   2.2  XML 方式封转数据 (组装字符串)
+   */
+
+
+
+
+   class Response{
+     public static function xmlEncode($code,$msg='',$data){
+       if(!is_numeric($code)){
+         return '';
+       }
+         $arr = [
+           'code' => $code,
+           'msg'  => $msg,
+           'data' => $data,
+         ];
+         header("Content-Type:text/xml");
+         $xml  = '<?xml version="1.0" encoding="UTF-8"?>';
+         $xml .= '<root>';
+         $xml .= self::xmlToEncode($arr);
+         $xml .= '</root>';
+         echo $xml;
+     }
+
+     public static function xmlToEncode($data){
+       $xml  = '';
+       $attr = '';
+       foreach($data as $key => $val){
+         if(is_numeric($key)){
+           $attr = " id='{$key}'";
+           $key  = "item";
+         }
+         $xml .= "<{$key}{$attr}>";
+         $xml .= is_array($val) ? self::xmlToEncode($val) : $val;
+         $xml .= "</{$key}>";
+       }
+       return $xml;
+     }
+   }
+
+   Response::xmlEncode(200,'返回数据成功',['id'=>1,'name'=>'lijian','type'=>[1,2,3]]);
+
+
+
+
+   /**
+    *  综合方式 可以选择json 或者选择xml  默认 json
+    *  简单写法 , 无优化
+    */
+
+
+    class Response{
+
+      public static function test($code,$msg='',$data=[],$type='json'){
+        if($type == 'json'){
+          self::json($code,$msg,$data);
+        }elseif($type == 'xml'){
+          self::xmlEncode($code,$msg,$data);
+        }
+      }
+
+      public static function json($code,$msg='',$data=[]){
+        if(!is_numeric($code)){
+          return '';
+        }
+         $arr = [
+           'code' => $code,
+           'msg'  => $msg,
+           'data' => $data,
+         ];
+
+         echo  json_encode($arr);
+         exit;
+      }
+
+
+      public static function xmlEncode($code,$msg='',$data){
+        if(!is_numeric($code)){
+          return '';
+        }
+          $arr = [
+            'code' => $code,
+            'msg'  => $msg,
+            'data' => $data,
+          ];
+          header("Content-Type:text/xml");
+          $xml  = '<?xml version="1.0" encoding="UTF-8"?>';
+          $xml .= '<root>';
+          $xml .= self::xmlToEncode($arr);
+          $xml .= '</root>';
+          echo $xml;
+      }
+
+      public static function xmlToEncode($data){
+        $xml  = '';
+        $attr = '';
+        foreach($data as $key => $val){
+          if(is_numeric($key)){
+            $attr = " id='{$key}'";
+            $key  = "item";
+          }
+          $xml .= "<{$key}{$attr}>";
+          $xml .= is_array($val) ? self::xmlToEncode($val) : $val;
+          $xml .= "</{$key}>";
+        }
+        return $xml;
+      }
+    }
+
+    Response::test(200,'返回数据成功',['id'=>1,'name'=>'lijian','type'=>[1,2,3]],'xml');
+
+
+/**
+ *    核心技术
+ *           1.  缓存技术
+ *                1.1     静态缓存
+ *                1.2.1   Memcache
+ *                1.2.2   redies
+ *           2.  定时任务
+ */
+
+
+/**
+ *   php 操作缓存：
+ *                1. 生成缓存
+ *                2. 获取缓存
+ *                3. 删除缓存
+ */
+
+
+ /**
+  *   生成静态缓存
+  */
+
+  /**
+  *   File  静态缓存
+  *
+  *   @param  string   $key          静态文件名称
+  *   @param  如果是  空字符串        读取静态文件
+  *           如果是  NULL           删除缓存
+  *           如何是  string/array   生成缓存
+  *   @param  string  文件路径
+  *
+  *   return  boolean
+  */
+
+ class File{
+
+ 	const EXT = '.txt';
+ 	public $dir;
+
+ 	public function __construct(){
+ 		$this->dir = dirname(__FILE__).'/files/';
+ 	}
+
+ 	public function cacheData($key,$value,$path){
+
+ 		$dirname  = $this->dir.$path.'/';
+ 		$filename = $dirname.$key.self::EXT;
+
+ 		if(!is_dir($dirname)){
+ 			mkdir($dirname,0777);
+ 		}
+
+ 		if($value !== ''){
+
+ 			if($value === NULL){
+ 				return unlink($filename);
+ 			}
+ 			return file_put_contents($filename,json_encode($value));
+ 		}
+
+ 		if(is_file($filename)){
+
+ 			$file = json_decode(file_get_contents($filename));
+ 			if($file){
+ 				return true;
+ 			}else{
+ 				return false;
+ 			}
+ 		}
+ 	}
+ }
+
+ $data = [
+ 	'id'   => 201,
+ 	'name' => 'lijian12',
+ ];
+
+ $file = new File();
+ $file->cacheData('test',$data,'156');
+
+
+ /**
+  *  memcache  Redis
+  *
+  *   1.  memcache 和 Redis 都是用来管理数据的
+  *   2.  他们都是把数据存储在内存里
+  *   3.  Redis 可以定期把数据备份到磁盘(持久化)
+  *   4.  memcache 只是简单的 key/value 缓存
+  *   5.  Redis 不仅支持 key/value 存储数据, 还提供了 list、set、hash等数据结构的存储
+  */
+
+
+ /**
+  *  如何操作数据库 mysql
+  *
+  *   mysql  客户端   mysql服务器
+  */
+
+
+ /**
+  *  Redis  缓存技术 (数据操作)
+  *
+  *   1.  开启 Redis客户端
+  *   2.  设置缓存值    set 缓存名称  缓存数据
+  *   3.  获取缓存值    get 缓存名称
+  *   4.  设置过期时间  setex  key 10 value  (10s)
+  *   5.  删除缓存值    delete key
+  *
+  *
+  * 重点  ：  php如何操作 Redis
+  *
+  *   1.  安装phpredis扩展
+  *   2.  php链接 redis服务 --connect(127.0.0.1  6379端口)
+  *   3.  set  设置缓存
+  *   4.  get  获取缓存
+  */
+
+
+
+
+/**
+ *  php 操作Redis设置缓存
+ */
+
+ $redis = new Redis();
+ $redis->connect('127.0.0.1',6379);
+ $redis->set('singwa',123);
+
+ /**
+  *  php 操作Redis 获取缓存
+  */
+
+
+  $redis = new Redis();
+  $redis->connect('127.0.0.1',6379);
+  $singwa = $redis->get('singwa');
+  var_dump($singwa);
+
+
+  /**
+   *  php 操作 Redis 获取缓存, 有效时间
+   */
+
+
+ $reids = new Redis();
+ $redis->connect('127.0.0.1',6379);
+ $redis->setex('singwa',10,'456');
+
+
+
+/**
+ *  php 操作 memcache 缓存
+ *
+ *    前提： 安装一个扩展
+ *
+ *    1.  安装 memcache 扩展
+ *    2.  链接服务--connect('memcache_host',11211);
+ *    3.  set 设置缓存
+ *    4.  get 获取缓存
+ */
+
+
+/**
+ *   定时任务  主要是 讲 linux下
+ *
+ *    1.  如何设置定时任务  常用命令
+ *    2.  如何定时运行php程序
+ *
+ *    定时任务  提供 crontab命令 来设置
+ *
+ *    crontab -e   编辑某个用户的 cron 服务
+ *    crontab -l   列出某个用户的 cron 服务的详细内容
+ *    crontab -r   删除某个用户的 cron 服务
+ *
+ *
+ *
+ *    定时任务 格式
+ *
+ *        分   小时     日    月     星期    命令
+ *        *     *       *     *       *     command
+ *       0-59  0-23    1-31   1-12   0-6
+ *
+ *        *  代表取值范围数字
+ *        /  代表每
+ *
+ *     例子：
+ *
+ *                       */1  * * * *  php  /www/data/contest.php   每分钟执行一次 contest.php 文件
+/**
+ *                       50  7 * * *   /sbin/server  ssh start      每天的 7:50 开启ssh服务
+ *
+ */
+
+
+
+/**
+ *    定时任务 结合php案例
+ *
+ *    问题：   如何设置每分钟插入数据到数据表中
+ */
