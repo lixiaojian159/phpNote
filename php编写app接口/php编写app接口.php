@@ -461,3 +461,76 @@
  *
  *    问题：   如何设置每分钟插入数据到数据表中
  */
+
+
+/**
+ *   APP接口实例
+ *
+ *    单例模式 连接数据库
+ *
+ *    单例的三大原则：
+ *                   1. __construct()析构方法  非public (防止外部new实例化)
+ *                   2. 拥有一个保存实例的 public 的静态成员变量 static $_instance
+ *                   3. 拥有一个访问这个方法(公共、静态)
+ */
+
+
+ class DB{
+
+ 	private $link;
+ 	private static $instance = null;
+
+ 	private function __construct(){
+
+ 		$this->link = mysqli_connect('localhost','root','','test2');
+ 	}
+
+ 	public static function getIns(){
+
+ 		if(!(self::$instance instanceof self)){
+ 			self::$instance = new self();
+ 		}
+ 		return self::$instance;
+ 	}
+
+ 	private function __clone(){
+
+ 	}
+
+ }
+
+ $db1 = DB::getIns();
+
+ $db2 = DB::getIns();
+
+ echo '<pre>';
+ var_dump($db1);
+ var_dump($db2);
+
+ if($db1 === $db2){
+ 	echo '$db1 === $db2';
+ }else{
+ 	echo '$db1 != $db2';
+ }
+
+
+
+
+/**
+ *  首页APP接口开发 ：
+ *
+ *    1. 从读取数据库方式      数据库  --->  封装   ---> 生成接口数据  (数据时效性比较高)
+ *
+ *    2. 从缓存数据方式        数据库  ----> 封装  ---> 缓存 ----> 返回数据
+ *
+ *    3. 定时读取缓存数据方式  数据库  --->
+ *
+ */
+
+
+/**
+ *   首页APP接口开发   从数据库里面读取数据
+ *
+ *    1. 如何获取数据
+ *    2. 如何将获取的数据生成通信数据
+ */
