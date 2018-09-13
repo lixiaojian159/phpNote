@@ -202,7 +202,7 @@
 
     class Response{
 
-      public static function test($code,$msg='',$data=[],$type='json'){
+      public static function show($code,$msg='',$data=[],$type='json'){
         if($type == 'json'){
           self::json($code,$msg,$data);
         }elseif($type == 'xml'){
@@ -258,7 +258,7 @@
       }
     }
 
-    Response::test(200,'返回数据成功',['id'=>1,'name'=>'lijian','type'=>[1,2,3]],'xml');
+    Response::show(200,'返回数据成功',['id'=>1,'name'=>'lijian','type'=>[1,2,3]],'xml');
 
 
 /**
@@ -284,7 +284,7 @@
   */
 
   /**
-  *   File  静态缓存
+  *   File  静态缓存   版本一
   *
   *   @param  string   $key          静态文件名称
   *   @param  如果是  空字符串        读取静态文件
@@ -324,11 +324,7 @@
  		if(is_file($filename)){
 
  			$file = json_decode(file_get_contents($filename));
- 			if($file){
- 				return true;
- 			}else{
- 				return false;
- 			}
+      return $file;
  		}
  	}
  }
@@ -340,6 +336,75 @@
 
  $file = new File();
  $file->cacheData('test',$data,'156');
+
+
+
+
+ /**
+  *   File  静态缓存
+  *
+  *    File  静态缓存   版本二  (与版本一的差别：缓存有效期)
+  *
+  *   @param  string   $key          静态文件名称
+  *   @param  如果是  空字符串        读取静态文件
+  *           如果是  NULL           删除缓存
+  *           如何是  string/array   生成缓存
+  *   @param  int     $cacheTime     缓存有效期
+  *   @param  string  文件路径
+  *
+  *   return  boolean
+  */
+
+ class File{
+
+ 	const EXT = '.txt';
+ 	public $dir;
+
+ 	public function __construct(){
+ 		$this->dir = dirname(__FILE__).'/files/';
+ 	}
+
+ 	public function cacheData($key,$value='',$cacheTime=0){
+
+ 		$dirname  = $this->dir;
+
+ 		$filename = $dirname.$key.self::EXT;
+
+ 		if(!is_dir($dirname)){
+ 			mkdir($dirname,0777);
+ 		}
+
+ 		if($value !== ''){
+
+ 			if($value === NULL){
+ 				return unlink($filename);
+ 			}
+ 			$cacheTime = sprintf('%011d',$cacheTime);
+ 			return file_put_contents($filename,$cacheTime.json_encode($value));
+ 		}
+
+ 		if(is_file($filename)){
+
+ 			$contents  = file_get_contents($filename);
+ 			$content   = substr($contents,11);
+ 			$cacheTime = intval(substr($contents,0,11));  //强制转换
+ 			if( $cacheTime != 0 && ($cacheTime + filemtime($filename)) < time()){
+ 				unlink($filename);
+ 				return false;
+ 			}
+ 			$file = json_decode($content,true);
+ 			return $file;
+ 		}
+ 	}
+ }
+
+ $data = [
+ 	'id'   => 201,
+ 	'name' => 'lijian12',
+ ];
+
+ $file = new File();
+ $file->cacheData('test');
 
 
  /**
@@ -533,4 +598,33 @@
  *
  *    1. 如何获取数据
  *    2. 如何将获取的数据生成通信数据
+ *
+ *    HTTP请求  --->  服务器 ----> 查询数据 ---> 返回数据
+ */
+
+/**
+ *  *** 一定要养成书写  接口文档
+ */
+
+
+ /**
+  *  首页APP接口开发  读取缓存的方式
+  *
+  *   1. 静态缓存如何设置缓存时间
+  *
+  *   2. 如何设置缓存
+  *
+  *       静态缓存     memcache缓存   Redis缓存
+  */
+
+
+/**
+ *  定时读取缓存方式
+ *
+ *   1. 如何编写定时脚本程序
+ *   2. 理解服务器如何提前准备数据
+ *
+ *   项目场景：
+ *       HTTP请求  ----> 服务器 --->  读取缓存
+ *       crontab ---> 生成缓存
  */
