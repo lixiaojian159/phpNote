@@ -628,3 +628,6 @@
  *       HTTP请求  ----> 服务器 --->  读取缓存
  *       crontab ---> 生成缓存
  */
+
+
+*/5 * * * * /usr/bin/php  data/www/app/cron.php   
