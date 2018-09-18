@@ -26,7 +26,7 @@
  * Laravel 默认创建的两个迁移文件，一个用于构建用户表，一个用于构建密码重置表
  *
  *      database/migrations/2014_10_12_000000_create_users_table.php
-        database/migrations/2014_10_12_100000_create_password_resets_table.php
+ *      database/migrations/2014_10_12_100000_create_password_resets_table.php
 
  *
  * 数据迁移   database/migrations 文件夹下(有新生成的迁移文件,才可以迁移)     php artisan migrate
