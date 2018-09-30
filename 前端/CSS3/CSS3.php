@@ -18,6 +18,7 @@
 /**
  *  box-shadow:  边框 阴影
  *               box-shadow: X轴偏移量 Y轴偏移量 [阴影模糊半径] [阴影扩展半径] [阴影颜色] [投影方式];
+ *               可以添加一个或者多个阴影
  *               1. box-shadow: 4px 2px 4px #333333;       外阴影
  *               2. box-shadow: 4px 2px 4px #333333 inset; 内阴影
  *
